@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drive Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/home.js" defer></script>
+  </head>
+
+  <body
+    class="bg-gray-100 dark:bg-[#0f172a] text-gray-900 dark:text-white h-screen overflow-x-hidden"
+  >
+    <div class="flex h-full">
+      <!-- SIDEBAR -->
+      <aside
+        class="hidden md:block w-64 bg-white dark:bg-[#020617] border-r border-gray-200 dark:border-white/10 p-4"
+      >
+        <div class="flex items-center gap-2 mb-6">
+          <img src="/assets/logo.svg" class="h-8" />
+        </div>
+
+        <button
+          onclick="openUpload()"
+          class="w-30 h-14 flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-2xl mb-6 cursor-pointer hover:bg-blue-700 transition"
+        >
+          <i class="ri-add-line text-2xl"></i> <span class="text-lg">New</span>
+        </button>
+
+        <nav class="space-y-2 text-sm">
+          <div
+            class="flex items-center gap-3 px-3 py-2 rounded bg-blue-100 dark:bg-blue-500/20"
+          >
+            <i class="ri-home-5-line"></i> Home
+          </div>
+          <div
+            class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+          >
+            <i class="ri-folder-line"></i> My Drive
+          </div>
+          <div
+            class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+          >
+            <i class="ri-time-line"></i> Recent
+          </div>
+          <div
+            class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+          >
+            <i class="ri-star-line"></i> Starred
+          </div>
+          <div
+            class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+          >
+            <i class="ri-delete-bin-line"></i> Trash
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <div class="flex-1 flex flex-col">
+        <!-- TOP BAR -->
+        <header
+          class="flex items-center gap-4 p-4 border-b border-gray-200 dark:border-white/10"
+        >
+          <button class="md:hidden text-2xl" onclick="toggleSidebar()">
+            <i class="ri-menu-line"></i>
+          </button>
+          <div class="flex-1">
+            <input
+              type="text"
+              placeholder="Search in Drive"
+              onkeyup="filterFiles(this.value)"
+              class="w-full  px-4 py-2 mb-2 mt-2 rounded-full bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <!-- Profile Avatar -->
+              <div
+                onclick="toggleProfileMenu()"
+                class="h-10 w-10 bg-purple-500 rounded-full text-xl flex items-center justify-center text-white cursor-pointer select-none"
+              >
+                <%= user.username[0].toUpperCase() %>
+              </div>
+
+              <!-- Dropdown -->
+              <div
+                id="profileMenu"
+                class="absolute right-0 mt-2 w-30 h-10 bg-red-500 border border-white/10 rounded-lg hidden"
+              >
+                <a
+                  href="/user/logout"
+                  class="h-full block px-4 py-1 text-[17px] text-white hover:bg-red-700 rounded-lg justify-center flex items-center"
+                >
+                  Logout
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              id="viewToggleBtn"
+              class="p-2 rounded-lg bg-slate-700 text-white"
+              onclick="toggleView()"
+            >
+              <i id="viewToggleIcon" class="ri-list-check"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="flex-1 overflow-y-auto p-6 overflow-x-hidden">
+          <% if (query && query.uploadError) { %>
+          <p class="text-red-400 text-sm mb-3 text-center">
+            <%= query.uploadError %>
+          </p>
+          <% } %>
+
+          <h1 class="text-2xl font-medium mb-4">Welcome to Drive</h1>
+
+          <!-- FILE LIST -->
+          <div id="listView">
+            <div class="bg-white dark:bg-white/5 rounded-lg md:text-xs">
+              <table class="w-full text-sm">
+                <thead class="bg-gray-100 dark:bg-white/10">
+                  <tr>
+                    <th class="text-left px-4 py-3">Name</th>
+                    <th class="text-left px-4 py-3">Type</th>
+                    <th class="text-left px-4 py-3">Size</th>
+                    <th class="px-4 py-3"></th>
+                  </tr>
+                </thead>
+
+                <tbody id="fileTable">
+                  <% if (files.length > 0) { %> <% files.forEach(file => { %>
+                  <tr
+                    class="file-row border-t border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10 cursor-pointer"
+                    data-name="<%= file.originalName.toLowerCase() %>"
+                    onclick='openFile("<%= file.cloudinaryUrl %>", "<%= file.fileType %>")'
+                  >
+                    <td class="px-4 py-3 flex items-center gap-2">
+                      <i class="ri-file-line"></i>
+                      <%= file.originalName %>
+                    </td>
+                    <td class="px-4 py-3"><%= file.fileType %></td>
+                    <td class="px-4 py-3">
+                      <%= (file.size / 1024).toFixed(1) %> KB
+                    </td>
+                    <td
+                      class="px-2 py-2 relative"
+                      onclick="event.stopPropagation()"
+                    >
+                      <!-- 3 dots button -->
+                      <button
+                        onclick="toggleOptions('<%= file._id %>')"
+                        class="rounded-full hover: cursor-pointer"
+                      >
+                        <i class="ri-more-2-fill text-xl"></i>
+                      </button>
+
+                      <!-- Dropdown -->
+
+                      <div
+                        id="options_<%= file._id %>"
+                        class="hidden absolute right-6 mt-2 w-30 bg-white dark:bg-gray-600 border border-gray-200 dark:border-white/10 rounded-lg shadow-lg z-50"
+                      >
+                        <button
+                          onclick="downloadFile('<%= file.cloudinaryUrl %>', '<%= file.originalName %>')"
+                          class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/10"
+                        >
+                          <i class="ri-download-line"></i> Download
+                        </button>
+
+                        <button
+                          onclick="openRename('<%= file._id %>', '<%= file.originalName %>')"
+                          type="button"
+                          class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/10"
+                        >
+                          <i class="ri-pencil-line mr-2"></i> Rename
+                        </button>
+                        <form
+                          action="/file/delete/<%= file._id %>"
+                          method="POST"
+                          onsubmit="return confirm('Are you sure you want to delete this file?')"
+                        >
+                          <button
+                            type="submit"
+                            class="w-full text-left px-2 py-2 text-[15px] text-white hover:bg-gray-400 dark:hover:bg-white/10 cursor-pointer"
+                          >
+                            <i class="ri-delete-bin-line mr-2 ml-2"></i>
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }) %> <% } else { %>
+                  <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-400">
+                      No files uploaded yet
+                    </td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div
+            id="gridView"
+            class="hidden grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 overflow-visible"
+          >
+            <% files.forEach(file => { %>
+            <div
+              class="group bg-white dark:bg-white/5 rounded-xl p-3 hover:shadow-lg cursor-pointer"
+              onclick='openFile("<%= file.cloudinaryUrl %>", "<%= file.fileType %>")'
+            >
+              <!-- FILE PREVIEW -->
+              <div
+                class="h-28 flex items-center justify-center bg-slate-800 rounded-lg mb-2"
+              >
+                <% if (file.fileType.startsWith("image/")) { %>
+                <img
+                  src="<%= file.cloudinaryUrl %>"
+                  class="max-h-full max-w-full object-contain rounded"
+                />
+                <% } else { %>
+                <i class="ri-file-line text-4xl text-gray-400"></i>
+                <% } %>
+              </div>
+
+              <!-- FILE NAME -->
+              <p class="text-sm truncate"><%= file.originalName %></p>
+
+              <!-- ACTIONS -->
+              <div
+                class=" flex justify-end gap-2 mt-2 cursor-pointer "
+                onclick="event.stopPropagation()"
+              >
+                <button
+                  class="hover:text-blue-400 cursor-pointer"
+                  onclick="downloadFile('<%= file.cloudinaryUrl %>', '<%= file.originalName %>')"
+                >
+                  <i class="ri-download-line"></i>
+                </button>
+
+                <button
+                class="hover:text-blue-400 cursor-pointer"
+                  onclick="openRename('<%= file._id %>', '<%= file.originalName %>')"
+                >
+                  <i class="ri-pencil-line"></i>
+                </button>
+
+                <form action="/file/delete/<%= file._id %>" method="POST">
+                  <button type="submit" class="hover:text-blue-400 cursor-pointer">
+                    <i class="ri-delete-bin-line "></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- RENAME MODAL -->
+    <div
+      id="renameModal"
+      class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    >
+      <div class="bg-slate-800 p-6 rounded-xl w-96">
+        <h3 class="text-lg mb-4">Rename file</h3>
+
+        <form id="renameForm" method="POST">
+          <input
+            type="text"
+            name="newName"
+            id="renameInput"
+            class="w-full px-4 py-2 rounded bg-slate-700 text-white mb-4"
+            required
+          />
+
+          <div class="flex justify-end gap-3">
+            <button
+              type="button"
+              onclick="closeRename()"
+              class="px-4 py-2 text-sm text-gray-300"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm"
+            >
+              Rename
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="previewModal"
+      class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+    >
+      <div
+        class="relative bg-slate-900 p-8 rounded-lg max-w-[90%] max-h-[90%] overflow-auto smooth-scroll"
+      >
+        <button
+          onclick="closePreview()"
+          class="absolute top-2 right-3 text-white text-2xl"
+        >
+          ✕
+        </button>
+
+        <img
+          id="imagePreview"
+          class="hidden max-w-full h-auto rounded block mx-auto"
+        />
+      </div>
+    </div>
+
+    <!--MOBILE SIDEBAR -->
+    <div
+      id="mobileSidebar"
+      class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"
+    >
+      <aside class="w-64 bg-[#020617] h-full p-4">
+        <button class="text-white text-xl mb-4" onclick="toggleSidebar()">
+          ✕
+        </button>
+
+        <!-- SIDEBAR CONTENT -->
+        <div>
+          <div class="flex items-center gap-2 mb-6">
+            <img src="/assets/logo.svg" class="h-8" />
+          </div>
+
+          <button
+            onclick="openUpload()"
+            class="z-40 w-30 h-14 flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-2xl mb-6 cursor-pointer hover:bg-blue-700 transition"
+          >
+            <i class="ri-add-line text-2xl"></i>
+            <span class="text-lg">New</span>
+          </button>
+
+          <nav class="space-y-2 text-sm">
+            <div
+              class="flex items-center gap-3 px-3 py-2 rounded bg-blue-100 dark:bg-blue-500/20"
+            >
+              <i class="ri-home-5-line"></i> Home
+            </div>
+            <div
+              class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+            >
+              <i class="ri-folder-line"></i> My Drive
+            </div>
+            <div
+              class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+            >
+              <i class="ri-time-line"></i> Recent
+            </div>
+            <div
+              class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+            >
+              <i class="ri-star-line"></i> Starred
+            </div>
+            <div
+              class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-white/10"
+            >
+              <i class="ri-delete-bin-line"></i> Trash
+            </div>
+          </nav>
+        </div>
+      </aside>
+    </div>
+
+    <div
+      id="uploadModal"
+      class="hidden fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50"
+    >
+      <div class="bg-slate-800 p-6 rounded-xl w-96 relative">
+        <!-- Close -->
+        <button
+          onclick="closeUpload()"
+          class="absolute top-1 right-1 text-white text-2xl cursor-pointer"
+        >
+          <i class="ri-close-line"></i>
+        </button>
+
+        <!-- Upload Form -->
+        <form
+          action="/file/upload"
+          method="POST"
+          enctype="multipart/form-data"
+          class="space-y-4"
+          onsubmit=" return handleUpload()"
+        >
+          <label
+            for="fileInput"
+            class="flex flex-col items-center justify-center h-48 border-2 border-dashed border-slate-500 rounded-lg cursor-pointer hover:bg-slate-700 text-slate-300"
+          >
+            <i id="uploadIcon" class="ri-upload-cloud-2-line text-4xl mb-2"></i>
+
+            <p id="uploadText" class="text-sm">Click to upload</p>
+
+            <p id="fileName" class="text-xs text-green-400 mt-2 hidden"></p>
+
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              name="file"
+              class="hidden"
+              required
+              onchange="fileSelected(this)"
+            />
+          </label>
+
+          <button
+            type="submit"
+            id="uploadBtn"
+            class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg text-white font-semibold"
+          >
+            Upload
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

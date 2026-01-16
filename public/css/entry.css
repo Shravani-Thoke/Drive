@@ -1,0 +1,146 @@
+body{
+    font-family: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, 
+                 "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    height: 100%;
+    width:100%;
+    margin:0px;
+    background:
+    radial-gradient(
+      circle at 60% 40%,
+      rgba(59, 130, 246, 0.25),
+      rgba(11, 18, 32, 0.9) 55%
+    ),
+    linear-gradient(
+      180deg,
+      #0B1220 0%,
+      #0F172A 100%
+    );
+}
+
+.container{
+    height: 100%;
+    width:100%;
+    position: relative;
+}
+nav{
+    height: 60px;
+    width:100%;
+    background:
+    radial-gradient(
+      circle at 70% 30%,
+      rgba(59, 130, 246, 0.25),
+      rgba(11, 18, 32, 0.9) 65%
+    ),
+    linear-gradient(
+      180deg,
+      #0B1220 0%,
+      #0F172A 100%
+    );
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    box-sizing: border-box;
+    color: white;
+    border-bottom: #272C2E 2px solid;
+}
+button{
+    height: 40px;
+    width: 100px;
+    background-color: #1A73E8;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+button:hover{
+    background-color: #0652b5;
+}
+main{
+    height: calc(100% - 60px);
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.left-section{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    padding: 0px 100px;
+    box-sizing: border-box;
+    margin-top: 2%;
+    
+}
+.left-section h1{
+    font-size: 55px;
+    margin-bottom: 10px;
+    font-weight: 700
+}
+.left-section p{
+    color:#5F637C;
+    font-size: 23px;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+.left-section button{
+    height: 50px;
+    width: 150px;
+    font-size: 18px;
+    border-radius: 60px !important;
+}
+.right-section{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+.hero-img{
+    margin-top: 8%;
+  width: 75%;
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo img{
+    height: 100px;
+    width: 100px;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+  }
+
+  .left-section h1 {
+    font-size: 32px;
+  }
+
+  .left-section p {
+    font-size: 16px;
+  }
+
+  .hero-img {
+    width: 90%;
+    margin: 20px auto 0;
+  }
+
+  nav {
+    padding: 0 12px;
+  }
+
+  button {
+    width: auto;
+    padding: 0 20px;
+  }
+}
