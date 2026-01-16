@@ -22,8 +22,8 @@ connectToDB()
 app.use("/user",userRoutes)
 app.use("/",indexRoutes)
 app.use("/file", fileRoutes);
-
-app.listen(3000,()=>{
-    console.log("Server is running on port 3000");
+PORT=process.env.PORT || 3000
+app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
 })
-
+    
