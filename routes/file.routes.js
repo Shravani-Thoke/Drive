@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const isLoggedIn = require("../middleware/auth");
 const upload = require("../middleware/multer");
 const cloudinary = require("../utils/cloudinary");
