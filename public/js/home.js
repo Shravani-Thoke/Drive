@@ -258,6 +258,32 @@ function closeRename() {
   document.getElementById("renameModal").classList.add("hidden");
 }
 
+function confirmDelete(e, fileId) {
+  e.preventDefault();
+
+  Swal.fire({
+    title: "Delete file?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#ef4444",
+    cancelButtonColor: "#64748b",
+    confirmButtonText: "Yes, delete",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = `/file/delete/${fileId}`;
+      document.body.appendChild(form);
+      form.submit();
+    }
+  });
+
+  return false;
+}
+
+
 function openFile(url, type) {
   // IMAGE
   console.log("OPEN FILE:", url, type);
