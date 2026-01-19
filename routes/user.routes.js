@@ -11,7 +11,9 @@ router.get("/", (req, res) => {
     res.render("index")
 })
 router.get("/register", (req, res) => {
-    res.render("register")
+    res.render("register",{
+    error: req.query.error
+    })
 })
 router.post("/register",
     body("username").trim().isLength({ min: 3 }),
@@ -21,10 +23,7 @@ router.post("/register",
     async (req, res) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors: errors.array(),
-                message: "Invalid data"
-            })
+            return res.redirect('/user/register?error=Invalid data provided');
         }
 
         const { username, email, password } = req.body
@@ -48,36 +47,32 @@ router.post("/register",
 
 })
 router.get("/login",(req,res)=>{
-    res.render("login")
+    res.render("login", {
+    error: req.query.error
+  });
 })
 router.post("/login",
-    body("username").trim().isLength({min:3}),
+    body("email").trim().isLength({min:3}),
     body("password").trim().isLength({min:5}),
     async (req,res)=>{
+        console.log("REQ BODY:", req.body);
         const errors=validationResult(req)
         if(!errors.isEmpty()){
-            return res.status(400).json({
-                errors:errors.array(),
-                message:"Invalid data"
-            })
+            return res.redirect('/user/login?error=Invalid data provided');
         }
 
-        const {username,password}=req.body
+        const {email,password}=req.body
         const user= await UserModel.findOne({
-            email: username 
+            email: email 
         })
         if(!user){
-            return res.status(400).json({
-                message:"username or password is incorrect"
-            })
+            return res.redirect('/user/login?error=Username or password is incorrect');
         }
 
         const isMatch=await bcrypt.compare(password,user.password)
 
         if(!isMatch){
-            return res.status(400).json({
-                message:"username or password is incorrect"
-            })
+            return res.redirect('/user/login?error=Username or password is incorrect');
         }
 
         const token = jwt.sign({

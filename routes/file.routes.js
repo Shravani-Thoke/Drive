@@ -3,6 +3,7 @@ const isLoggedIn = require("../middleware/auth");
 const upload = require("../middleware/multer");
 const cloudinary = require("../utils/cloudinary");
 const File = require("../models/file.model");
+const fs=require("fs");
 const router = express.Router();
 router.post(
   "/upload",
@@ -25,9 +26,7 @@ router.post(
           );
         }
 
-        return res.status(400).json({
-          message: err.message,
-        });
+        return res.redirect("/home?error=File upload failed. Please try again.");
       }
 
       next();
@@ -44,6 +43,8 @@ router.post(
         req.file.path,
         uploadOptions
       );
+
+      fs.unlinkSync(req.file.path); // delete file from local 'uploads' folder
 
       await File.create({
         owner: req.user.id,

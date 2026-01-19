@@ -1,105 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="../css/login.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <title>Register</title>
+    <title>Register</title>
+  </head>
 
-  
-</head>
-
-<body class="min-h-screen grid place-items-center
-bg-gradient-to-br from-[#020617] via-[#0b1c36] to-[#020617]">
-
-  <!-- CARD -->
-  <div class=" container rounded-2xl p-6
-    bg-[#1e2a44]/95
-    border border-white/5
-    shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
-
-    <h1 class="text-3xl font-semibold text-white text-center mb-2">
-      Create account
-    </h1>
-
-    <p class="text-xs text-slate-400 text-center mb-5">
-      Create an account to get started
-    </p>
-
-    <!-- FORM -->
-    <form action="/user/register" method="POST" class="space-y-5">
-
-      <!-- USERNAME -->
-      <input
-        type="text"
-        name="username"
-        placeholder="Username"
-        required
-        class="w-full rounded-lg bg-[#334155]/60
-        border border-white/10
-        px-3 py-2.5 text-sm text-white placeholder-slate-400
-        focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-
-      <!-- EMAIL -->
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        required
-        class="w-full rounded-lg bg-[#334155]/60
-        border border-white/10
-        px-3 py-2.5 text-sm text-white placeholder-slate-400
-        focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-
-      <!-- PASSWORD -->
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        required
-        class="w-full rounded-lg bg-[#334155]/60
-        border border-white/10
-        px-3 py-2.5 text-sm text-white placeholder-slate-400
-        focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-
-      <!-- SUBMIT -->
-      <button
-        type="submit"
-        class="w-full py-3 rounded-lg
-        bg-blue-600 hover:bg-blue-700
-        text-white font-medium transition">
+  <body
+    class="min-h-screen grid place-items-center bg-gradient-to-br from-[#020617] via-[#0b1c36] to-[#020617]"
+  >
+    <!-- CARD -->
+    <div
+      class="container rounded-2xl p-6 bg-[#1e2a44]/95 border border-white/5 shadow-[0_40px_120px_rgba(0,0,0,0.6)]"
+    >
+      <h1 class="text-3xl font-semibold text-white text-center mb-2">
         Create account
-      </button>
+      </h1>
 
-    </form>
+      <p class="text-xs text-slate-400 text-center mb-5">
+        Create an account to get started
+      </p>
 
-    <!-- DIVIDER -->
-    <div class="flex items-center my-6 text-slate-400 text-xs">
-      <div class="flex-grow border-t border-white/10"></div>
-      <span class="px-3">OR</span>
-      <div class="flex-grow border-t border-white/10"></div>
+      <!-- FORM -->
+      <form action="/user/register" method="POST" class="space-y-5">
+        <!-- USERNAME -->
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          required
+          class="w-full rounded-lg bg-[#334155]/60 border border-white/10 px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <!-- EMAIL -->
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          class="w-full rounded-lg bg-[#334155]/60 border border-white/10 px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <!-- PASSWORD -->
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+          class="w-full rounded-lg bg-[#334155]/60 border border-white/10 px-3 py-2.5 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <!--Error-->
+        <% if (error) { %>
+        <p class="text-red-400 text-sm text-center mb-3"><%= error %></p>
+        <% } %>
+        <!-- SUBMIT -->
+        <button
+          type="submit"
+          class="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
+        >
+          Create account
+        </button>
+      </form>
+
+      <!-- DIVIDER -->
+      <div class="flex items-center my-6 text-slate-400 text-xs">
+        <div class="flex-grow border-t border-white/10"></div>
+        <span class="px-3">OR</span>
+        <div class="flex-grow border-t border-white/10"></div>
+      </div>
+
+      <!-- FOOTER -->
+      <p class="text-sm text-center text-slate-400">
+        Already have an account?
+        <a href="/user/login" class="text-blue-400 hover:underline">
+          Sign in
+        </a>
+      </p>
     </div>
-
-    <!-- FOOTER -->
-    <p class="text-sm text-center text-slate-400">
-      Already have an account?
-      <a href="/user/login" class="text-blue-400 hover:underline">
-        Sign in
-      </a>
-    </p>
-
-  </div>
-
-</body>
+  </body>
 </html>
